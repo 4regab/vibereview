@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=202610162043">
+<link rel="stylesheet" href="assets/css/style.css?v=202610162055">
 </head>
 <body class="mode-home">
 
@@ -121,9 +121,13 @@
 <!-- ===== Settings: the switches run away when you try to turn things off ===== -->
 <div id="settings" class="settings hidden" role="dialog" aria-modal="true" aria-labelledby="setTitle">
   <div class="settings-card">
+    <div class="settings-top">
+      <h2 id="setTitle">Settings</h2>
+      <button id="settingsClose" class="icon-btn" type="button" aria-label="Close settings" data-icon="close"></button>
+    </div>
     <div class="settings-head">
       <div class="settings-cat" id="setCat" data-cat data-mood="idle"></div>
-      <div class="settings-bubble"><h2 id="setTitle">Settings</h2><p id="setMsg" aria-live="polite">Sounds and memes make the review fun. Sure ka?</p></div>
+      <div class="settings-bubble"><p id="setMsg" aria-live="polite">Sounds and memes make the review fun. Sure ka?</p></div>
     </div>
     <div class="set-row">
       <div><b>Sounds</b><small>Reactions when you answer</small></div>
@@ -141,7 +145,7 @@
 <div id="wipe" aria-hidden="true"><div class="wipe-cat" data-cat data-mood="happy"></div></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
 
-<script src="assets/js/terms.js?v=202610162043"></script>
-<script src="assets/js/app.js?v=202610162043"></script>
+<script src="assets/js/terms.js?v=202610162055"></script>
+<script src="assets/js/app.js?v=202610162055"></script>
 </body>
 </html>

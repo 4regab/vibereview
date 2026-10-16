@@ -99,10 +99,11 @@ main { max-width: 1080px; margin: 0 auto; padding: 18px 16px 40px; }
 .hero-bubble::after { left: -9px; border-right-color: var(--card); }
 .hero-bubble p { margin: 0; }
 .hero-bubble b { color: var(--orange-d); }
-.hero-copy h1 { font-size: clamp(1.75rem, 7.4vw, 2.7rem); line-height: 1.1; }
+.hero-copy h1 { font-size: clamp(2.05rem, 9.6vw, 3rem); line-height: 1.06; }
+.hero-copy h1 .line { display: block; }
 .hero-copy h1 .w { display: inline-block; animation: wordIn .6s var(--spring) both; }
 .hero-copy h1 .hl { color: var(--orange); }
-.hero-copy p { margin: 8px 0 0; color: var(--muted); max-width: 42ch; }
+.hero-copy p { margin: 10px 0 0; color: var(--muted); max-width: 42ch; }
 .section-label { margin: 0 0 12px; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 .section-label span { font-size: .78rem; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; font-weight: 900; white-space: nowrap; }
 .subjects { display: grid; gap: 16px; }
@@ -369,11 +370,11 @@ kbd { font-family: var(--font); font-weight: 900; padding: 0 6px; border-radius:
 /* ---------- Settings panel ---------- */
 .settings { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: rgba(43, 33, 24, .45); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); overflow: hidden; }
 .settings-card { width: min(420px, 100%); display: grid; gap: 12px; padding: 18px; background: var(--card); border: 2px solid var(--line); border-radius: 24px; box-shadow: 0 6px 0 var(--line), 0 24px 60px rgba(43, 33, 24, .3); }
-.settings-head { display: flex; align-items: flex-end; gap: 10px; }
-.settings-cat { width: 78px; flex: none; }
-.settings-bubble { flex: 1; min-width: 0; }
-.settings-bubble h2 { font-size: 1.35rem; }
-.settings-bubble p { margin: 2px 0 6px; min-height: 4.1em; color: var(--muted); font-size: .9rem; line-height: 1.35; }
+
+
+
+
+
 .set-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 2px solid var(--line); border-radius: var(--r); }
 .set-row b { display: block; color: var(--ink); }
 .set-row small { display: block; color: var(--muted); font-size: .8rem; line-height: 1.3; }
@@ -386,3 +387,13 @@ kbd { font-family: var(--font); font-weight: 900; padding: 0 6px; border-radius:
 .gear .ic { transition: transform .5s var(--spring); }
 @media (hover: hover) and (pointer: fine) { .gear:hover .ic { transform: rotate(70deg); } }
 @media (prefers-reduced-motion: reduce) { .switch, .switch .knob { transition: none; } }
+
+/* Settings header: title + close, then Ming with a speech bubble that fills the width (no dead space) */
+.settings-top { display: flex; align-items: center; justify-content: space-between; margin: -4px -6px -2px 0; }
+.settings-top h2 { font-size: 1.35rem; }
+.settings-head { display: flex; align-items: flex-end; gap: 12px; }
+.settings-cat { width: 72px; flex: none; }
+.settings-bubble { position: relative; flex: 1; min-width: 0; min-height: 64px; display: flex; align-items: center; padding: 10px 14px; margin-bottom: 14px; background: var(--soft); border: 2px solid var(--line); border-radius: 16px; }
+.settings-bubble::before { content: ""; position: absolute; left: -11px; bottom: 14px; border: 9px solid transparent; border-right: 11px solid var(--line); border-left: 0; }
+.settings-bubble::after { content: ""; position: absolute; left: -8px; bottom: 14px; border: 9px solid transparent; border-right: 11px solid var(--soft); border-left: 0; }
+.settings-bubble p { margin: 0; color: var(--ink); font-size: .95rem; font-weight: 800; line-height: 1.35; }

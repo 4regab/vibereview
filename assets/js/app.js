@@ -170,7 +170,9 @@ function setMood(el, mood) {
 }
 (function splitTitle() {
   const h = $("heroTitle");
-  h.innerHTML = h.textContent.split(" ").map((w, i) => `<span class="w${i >= 3 ? " hl" : ""}" style="animation-delay:${0.15 + i * 0.07}s">${w}</span>`).join(" ");
+  // One sentence per line ("Learn the terms." / "Pass the exam."), each word popping in after the last.
+  let k = 0;
+  h.innerHTML = h.textContent.split(/(?<=\.)\s+/).map((line, n) => `<span class="line${n ? " hl" : ""}">${line.split(" ").map((w) => `<span class="w" style="animation-delay:${0.15 + k++ * 0.07}s">${w}</span>`).join(" ")}</span>`).join("");
 })();
 
 // Ming's eyes follow the pointer (or the last tap) around the screen.
@@ -585,7 +587,7 @@ function pickTile(tile, side) {
     burst(b);
     current.done++;
     if (current.done === current.total) return resolveCorrect(current.misses === 0, b);
-    setMood(peek, "happy");
+    setMood($("peek"), "happy");
     peek.classList.remove("duck");
     setFoot("idle", `${current.done} of ${current.total} matched`, current.misses ? "Keep going." : "Nice. Keep going.");
     return;
@@ -687,7 +689,7 @@ function resolveCorrect(firstTry, anchor) {
   showMeme("good");
   updateStreak(firstTry);
   peek.classList.remove("duck");
-  setMood(peek, "happy");
+  setMood($("peek"), "happy");
   // Ming thumps the card with his paws.
   anim($("qCard"), [{ transform: "none" }, { transform: "translateY(3px)", offset: .2 }, { transform: "none", offset: .4 }, { transform: "translateY(3px)", offset: .6 }, { transform: "none" }], { duration: 520, delay: 120 });
   const bar = $("progress");
@@ -856,6 +858,7 @@ function closeSettings() {
 }
 $("settingsBtn").addEventListener("click", openSettings);
 $("settingsDone").addEventListener("click", closeSettings);
+$("settingsClose").addEventListener("click", closeSettings);
 $("settings").addEventListener("click", (e) => { if (e.target === $("settings")) closeSettings(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("settings").classList.contains("hidden")) closeSettings(); });
 
