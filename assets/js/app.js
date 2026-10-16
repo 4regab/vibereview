@@ -140,8 +140,8 @@ const store = {
   set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
 };
 // Player settings (Settings panel on the home page). Sounds and memes are on unless the player fought the switch and won.
-// Dark mode starts from the device's preference until the player picks one.
-const settings = { sound: true, memes: true, dark: matchMedia("(prefers-color-scheme: dark)").matches };
+// Light mode is the default; dark mode only turns on when the player picks it.
+const settings = { sound: true, memes: true, dark: false };
 try { Object.assign(settings, JSON.parse(store.get("vr_settings")) || {}); } catch {}
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
