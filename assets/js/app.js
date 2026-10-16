@@ -35,6 +35,13 @@ const ICONS = {
 const icon = (name) => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
 const sparkSvg = (c) => `<svg viewBox="0 0 24 24" aria-hidden="true" style="width:100%;height:100%;display:block"><path d="M12 1c1 7 4 10 11 11-7 1-10 4-11 11-1-7-4-10-11-11 7-1 10-4 11-11z" fill="${c}"/></svg>`;
 const CATHEAD = `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 30 L15 6 L31 20 Z M52 30 L49 6 L33 20 Z" fill="#ff8a1f" stroke="#ff8a1f" stroke-width="5" stroke-linejoin="round"/><ellipse cx="32" cy="37" rx="25" ry="21" fill="#e8700a"/><ellipse cx="32" cy="35" rx="25" ry="20" fill="#ff8a1f"/><ellipse cx="32" cy="45" rx="16" ry="10" fill="#ffe9cf"/><ellipse cx="23" cy="33" rx="7" ry="8" fill="#fff"/><ellipse cx="41" cy="33" rx="7" ry="8" fill="#fff"/><circle cx="24" cy="34" r="4.5" fill="#2b2118"/><circle cx="42" cy="34" r="4.5" fill="#2b2118"/><circle cx="25.5" cy="32" r="1.6" fill="#fff"/><circle cx="43.5" cy="32" r="1.6" fill="#fff"/><path d="M29 42h6l-3 3z" fill="#ff8fa6"/></svg>`;
+// The streak flame: four layers that flicker at different speeds (see .flame in style.css).
+const FLAME = `<span class="flame" aria-hidden="true"><svg viewBox="0 0 32 40">
+  <path class="f-outer" d="M16 1C19 9 28 14 28 25A12 12 0 0 1 4 25C4 18 8 14 11 10C11 15 13 17 15 18C13 11 14 6 16 1Z" fill="#ff4d1a"/>
+  <path class="f-mid" d="M16 10C18 15 24 19 24 26A8 8 0 0 1 8 26C8 21 11 18 13 16C13 19 14 21 16 22C15 18 15 14 16 10Z" fill="#ff8a00"/>
+  <path class="f-inner" d="M16 18C17.5 21 21 23 21 28A5 5 0 0 1 11 28C11 24 14 22 16 18Z" fill="#ffd23d"/>
+  <ellipse class="f-core" cx="16" cy="31" rx="2.8" ry="3.4" fill="#fff4c4"/>
+</svg></span>`;
 
 const ART = {
   research: `<svg viewBox="0 0 120 100" aria-hidden="true">
@@ -150,6 +157,7 @@ function fillArt(root = document) {
   root.querySelectorAll("[data-peekhead]").forEach((el) => { el.innerHTML = CAT_PEEK_HEAD; el.removeAttribute("data-peekhead"); });
   root.querySelectorAll("[data-peekpaws]").forEach((el) => { el.innerHTML = CAT_PEEK_PAWS; el.removeAttribute("data-peekpaws"); });
   root.querySelectorAll("[data-cathead]").forEach((el) => { el.innerHTML = CATHEAD; el.removeAttribute("data-cathead"); });
+  root.querySelectorAll("[data-flame]").forEach((el) => { el.outerHTML = FLAME; });
 }
 function setMood(el, mood) {
   el.dataset.mood = "idle";          // reset first so the hop / head shake can replay
@@ -212,19 +220,21 @@ const nextMeme = { good: makeImgBag("good", 10), bad: makeImgBag("bad", 11) };
 let memeAnim = null;
 function showMeme(kind) {
   const m = $("meme"), card = $("qCard");
-  // Room from the bottom of the card up to the top bar. The picture grows upward only, so the choices stay visible.
-  const room = card.getBoundingClientRect().bottom - document.querySelector(".quiz-top").getBoundingClientRect().bottom - 18;
-  card.style.setProperty("--meme-h", Math.max(120, Math.min(room / 1.08, innerHeight * .62)) + "px");
+  // The picture is centred in the free space between the top bar and the bottom of the card, and zooms from its centre.
+  // It is sized so that even at its biggest (EXIT) it never reaches the choices below.
+  const EXIT = 1.28, c = card.getBoundingClientRect(), top = document.querySelector(".quiz-top").getBoundingClientRect().bottom + 8, bottom = c.bottom - 6;
+  m.style.top = ((top + bottom) / 2 - c.top) + "px";
+  card.style.setProperty("--meme-h", Math.max(110, Math.min((bottom - top) / EXIT, innerHeight * .62)) + "px");
   $("memeImg").src = nextMeme[kind]();
   if (memeAnim) memeAnim.cancel();
   const hold = kind === "good" ? 2400 : 1900, enter = 750, exit = 650, total = enter + hold + exit;
   if (reduceMotion || !m.animate) { m.style.opacity = 1; clearTimeout(showMeme.t); showMeme.t = setTimeout(() => (m.style.opacity = 0), hold); return; }
-  // One motion only: the picture keeps zooming in. It grows into view, creeps closer while it holds, then zooms past you as it fades.
+  // One motion only: zoom in from the centre. It grows into view, creeps closer while it holds, then zooms a little more as it fades.
   memeAnim = m.animate([
-    { opacity: 0, transform: "translate(-50%, 0) scale(.35)", easing: "cubic-bezier(.16,1,.3,1)" },
-    { opacity: 1, transform: "translate(-50%, 0) scale(1)", offset: enter / total, easing: "linear" },
-    { opacity: 1, transform: "translate(-50%, 0) scale(1.06)", offset: (enter + hold) / total, easing: "cubic-bezier(.55,0,.75,.3)" },
-    { opacity: 0, transform: "translate(-50%, 0) scale(1.7)" },
+    { opacity: 0, transform: "translate(-50%, -50%) scale(.3)", easing: "cubic-bezier(.16,1,.3,1)" },
+    { opacity: 1, transform: "translate(-50%, -50%) scale(1)", offset: enter / total, easing: "linear" },
+    { opacity: 1, transform: "translate(-50%, -50%) scale(1.06)", offset: (enter + hold) / total, easing: "cubic-bezier(.55,0,.75,.3)" },
+    { opacity: 0, transform: `translate(-50%, -50%) scale(${EXIT})` },
   ], { duration: total });
 }
 function hideMeme() { if (memeAnim) memeAnim.cancel(); clearTimeout(showMeme.t); $("meme").style.opacity = 0; }
@@ -331,7 +341,7 @@ function pickOptions(index) {
 function fitQuestion() {
   const body = $("qBody"), t = $("question");
   if (!body.clientHeight) return;
-  const max = innerWidth >= 1024 ? 28 : innerWidth >= 768 ? 26 : innerWidth >= 640 ? 23 : 20, min = 12;
+  const max = (current && current.match ? .8 : 1) * (innerWidth >= 1024 ? 28 : innerWidth >= 768 ? 26 : innerWidth >= 640 ? 23 : 20), min = 12;
   let size = max;
   t.style.fontSize = size + "px";
   while (size > min && body.scrollHeight > body.clientHeight + 1) t.style.fontSize = --size + "px";
@@ -443,7 +453,7 @@ function startRound(s, fromEl, again = false) {
   pos = 0; score = 0; missed = []; streak = 0; bestStreak = 0; startedAt = Date.now();
   $("progress").setAttribute("aria-valuemax", order.length);
   $("streakNum").textContent = 0;
-  $("streak").classList.remove("on", "hot");
+  $("streak").classList.remove("on", "hot", "blaze");
   wipeTo("quiz", fromEl, () => renderQuestion(false));
 }
 
@@ -493,6 +503,7 @@ function renderQuestion(animateIn = true) {
   box.replaceChildren();
   box.className = current.match ? "options match" : "options";
   $("qCard").classList.toggle("is-match", current.match);
+  $("qCard").classList.remove("compact");
   if (current.match) buildMatch(entry, box);
   else current.options.forEach((opt, i) => {
     const b = document.createElement("button");
@@ -511,6 +522,7 @@ function renderQuestion(animateIn = true) {
     box.append(b);
   });
   fitQuestion();
+  if (current.match && box.scrollHeight > box.clientHeight + 1) { $("qCard").classList.add("compact"); fitQuestion(); }
 
   // Ming moves to a new spot on the card each question, then pops up from behind it.
   const peek = $("peek"), cat = $("quizCat");
@@ -599,20 +611,23 @@ function updateStreak(bump) {
   el.setAttribute("aria-label", `Streak: ${streak}`);
   el.classList.toggle("on", streak > 0);
   el.classList.toggle("hot", streak >= 3);
+  el.classList.toggle("blaze", streak >= 7);
   if (bump) {
-    anim(num, [{ transform: "translateY(80%)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 300, delay: 600, easing: "cubic-bezier(.34,1.56,.64,1)", fill: "backwards" });
-    anim(el, [{ transform: "scale(1)" }, { transform: "scale(1.3) rotate(-8deg)" }, { transform: "none" }], { duration: 440, delay: 600, easing: "cubic-bezier(.23,1,.32,1)" });
-    if (streak >= 3) setTimeout(() => burst(el, ["#ff7a00", "#ffc53d"]), 650);
+    // The number rolls up, and the flame flares when the "+1" lands on it.
+    anim(num, [{ transform: "translateY(80%)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 320, delay: 600, easing: "cubic-bezier(.34,1.56,.64,1)", fill: "backwards" });
+    anim(el.querySelector(".flame"), [{ transform: "scale(1)", filter: "brightness(1)" }, { transform: "scale(1.6) translateY(-3px)", filter: "brightness(1.5)", offset: .35 }, { transform: "scale(1.14)", filter: "brightness(1)" }], { duration: 560, delay: 600, easing: "cubic-bezier(.23,1,.32,1)" });
+    if (streak >= 3) setTimeout(() => burst(el, ["#ff7a00", "#ffc53d", "#ffd23d"]), 650);
   }
 }
 
 function toast(text) {
   const t = $("toast");
-  t.innerHTML = icon("flame");
-  t.append(text);
+  t.innerHTML = FLAME;
+  const parts = text.split(/(\d+)/);
+  parts.forEach((s, i) => { if (!s) return; if (i % 2) { const b = document.createElement("b"); b.textContent = s; t.append(b); } else t.append(s); });
   t.classList.add("show");
   clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => t.classList.remove("show"), 1600);
+  toast.timer = setTimeout(() => t.classList.remove("show"), 1800);
 }
 
 function answer(i) {
