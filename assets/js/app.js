@@ -212,17 +212,19 @@ const nextMeme = { good: makeImgBag("good", 10), bad: makeImgBag("bad", 11) };
 let memeAnim = null;
 function showMeme(kind) {
   const m = $("meme"), card = $("qCard");
-  card.style.setProperty("--card-h", card.clientHeight + "px");
+  // Room from the bottom of the card up to the top bar. The picture grows upward only, so the choices stay visible.
+  const room = card.getBoundingClientRect().bottom - document.querySelector(".quiz-top").getBoundingClientRect().bottom - 18;
+  card.style.setProperty("--meme-h", Math.max(120, Math.min(room / 1.08, innerHeight * .62)) + "px");
   $("memeImg").src = nextMeme[kind]();
   if (memeAnim) memeAnim.cancel();
   const hold = kind === "good" ? 2400 : 1900, enter = 750, exit = 650, total = enter + hold + exit;
   if (reduceMotion || !m.animate) { m.style.opacity = 1; clearTimeout(showMeme.t); showMeme.t = setTimeout(() => (m.style.opacity = 0), hold); return; }
   // One motion only: the picture keeps zooming in. It grows into view, creeps closer while it holds, then zooms past you as it fades.
   memeAnim = m.animate([
-    { opacity: 0, transform: "translate(-50%, -50%) scale(.35)", easing: "cubic-bezier(.16,1,.3,1)" },
-    { opacity: 1, transform: "translate(-50%, -50%) scale(1)", offset: enter / total, easing: "linear" },
-    { opacity: 1, transform: "translate(-50%, -50%) scale(1.06)", offset: (enter + hold) / total, easing: "cubic-bezier(.55,0,.75,.3)" },
-    { opacity: 0, transform: "translate(-50%, -50%) scale(1.7)" },
+    { opacity: 0, transform: "translate(-50%, 0) scale(.35)", easing: "cubic-bezier(.16,1,.3,1)" },
+    { opacity: 1, transform: "translate(-50%, 0) scale(1)", offset: enter / total, easing: "linear" },
+    { opacity: 1, transform: "translate(-50%, 0) scale(1.06)", offset: (enter + hold) / total, easing: "cubic-bezier(.55,0,.75,.3)" },
+    { opacity: 0, transform: "translate(-50%, 0) scale(1.7)" },
   ], { duration: total });
 }
 function hideMeme() { if (memeAnim) memeAnim.cancel(); clearTimeout(showMeme.t); $("meme").style.opacity = 0; }
@@ -490,6 +492,7 @@ function renderQuestion(animateIn = true) {
   const box = $("options");
   box.replaceChildren();
   box.className = current.match ? "options match" : "options";
+  $("qCard").classList.toggle("is-match", current.match);
   if (current.match) buildMatch(entry, box);
   else current.options.forEach((opt, i) => {
     const b = document.createElement("button");
