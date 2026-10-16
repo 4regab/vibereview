@@ -70,3 +70,5 @@ The sound clips come from [myinstants.com](https://www.myinstants.com) and the r
 ## Deploying
 
 The site is served by GitHub Pages from the `main` branch, root folder. Pushing to `main` publishes the change within a minute or two.
+
+GitHub Pages lets browsers cache files for 10 minutes. `index.html` loads the CSS and JS with a `?v=` version, for example `app.js?v=202610162043`. Change that number whenever you change a CSS or JS file, so browsers fetch the new files instead of an old cached copy.
