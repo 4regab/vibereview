@@ -1,28 +1,32 @@
 # vibe reviewer
 
-A quiz site for reviewing **Research** and **SIA** (Systems Integration & Architecture) terms. Ming, the study cat, reads you a definition and you pick the matching term.
+A quiz site for reviewing **Research** and **SIA** (Systems Integration & Architecture) terms. Ming, the study cat, gives you a definition and you pick the matching term.
 
 **Live site:** https://4regab.github.io/vibereview/
 
 ## How it works
 
-- **Rounds of 10.** Each subject has a question bank: 138 Research terms and 293 SIA terms. Every round takes the next 10 terms from the bank.
-- **Wrong? Try again.** A wrong pick locks that choice. You keep picking until you find the right answer.
-- **Missed terms come back.** A term you get right on the first try leaves the bank. A term you miss goes to the back of the bank and shows up in a later round.
+- **Rounds of 10.** Each subject has a question bank: 138 Research questions and 49 SIA questions. Every round takes the next 10 from the bank.
+- **Two kinds of question.** Most questions show a definition with four possible terms. SIA also has a **matching set**: tap a company (Netflix, Uber, TikTok, Amazon), then the tech it is known for.
+- **Wrong? Try again.** A wrong pick locks that choice, and a wrong pair shakes and unlocks. You keep going until you get it right.
+- **Missed questions come back.** A question you get right on the first try leaves the bank. A question you miss goes to the back of the bank and shows up in a later round.
 - **Try the round again.** The results screen lets you replay the same 10 questions. First-try answers in a replay also count toward the bank.
 - **Progress saves.** Your bank and round number are stored in your browser, so you can stop and come back later. "Restart" on a subject clears its progress.
 - **No giveaways.** If a definition contains the answer's own words, those words are blanked out.
-- **One screen.** The question and all four choices fit on one screen on phones, tablets and desktops. The few very long definitions scroll inside their card and show a "Scroll for more" hint.
+- **One screen.** The question and its choices fit on one screen on phones, tablets and desktops. The few very long definitions scroll inside their card and show a "Scroll for more" hint.
 
 Keyboard: press <kbd>1</kbd> to <kbd>4</kbd> to answer and <kbd>Enter</kbd> for the next question.
 
 ## Files
 
 ```
-index.html   the whole app: layout, styles, the term lists and the quiz logic
-sounds/      clips for right (correct*.mp3) and wrong (wrong*.mp3) answers
-memes/       reaction pictures for right (good*.jpg) and wrong (bad*.jpg) answers
-.nojekyll    tells GitHub Pages to serve the files as they are
+index.html             page layout
+assets/css/style.css   all styles
+assets/js/terms.js     the question banks (edit this to change questions)
+assets/js/app.js       quiz logic, animations, Ming the cat
+assets/sounds/         clips for right (correct*.mp3) and wrong (wrong*.mp3) answers
+assets/memes/          reaction pictures for right (good*.jpg) and wrong (bad*.jpg) answers
+.nojekyll              tells GitHub Pages to serve the files as they are
 ```
 
 There is no build step and no dependencies. The only outside request is the Nunito font from Google Fonts.
@@ -37,19 +41,30 @@ python -m http.server 8000
 
 Then open http://localhost:8000. Opening `index.html` straight from disk also works, but some browsers block the sounds that way.
 
-## Edit the terms
+## Edit the questions
 
-The terms are in `index.html`, inside `const SUBJECTS = { research: [...], sia: [...] }`. Each entry is a `["Term", "Definition"]` pair. Add, remove or fix entries, then reload the page.
+Open `assets/js/terms.js`. Each subject is a list. An entry is either a term and its definition:
 
-Saved progress stores term positions. If you change a list, press **Restart** on that subject so the saved bank matches the new list. The app also resets the bank by itself if the saved data no longer fits the list.
+```js
+["Circuit Breaker", "Stops calling a failing service to prevent cascading failures."],
+```
+
+or a matching set. Each pair is `[left tile, small hint, right tile]`:
+
+```js
+{ match: "Company and tech", prompt: "Match each company to the tech it is known for.",
+  pairs: [["Netflix", "graceful failure handling", "Circuit Breaker"], ...] },
+```
+
+Saved progress stores question positions. If you change a list, press **Restart** on that subject so the saved bank matches the new list. The app also resets the bank by itself if the saved data no longer fits the list.
 
 ## Sounds and pictures
 
 - The first wrong answer always plays `wrong0.mp3`, then `wrong7.mp3`. The first right answer always plays `correct5.mp3`.
-- After that, every clip plays once before any clip repeats, and the same clip never plays twice in a row. The memes rotate the same way.
+- After that, every clip plays once before any clip repeats, and the same clip never plays twice in a row. The pictures rotate the same way.
 - To swap a clip or picture, replace the file and keep the same name.
 
-The sound clips come from [myinstants.com](https://www.myinstants.com) and the reaction pictures from [Pinterest](https://ph.pinterest.com/ideas/memes/921358921047/). They belong to their original creators and are used here for a personal study tool. If you are the owner of one and want it removed, open an issue.
+The sound clips come from [myinstants.com](https://www.myinstants.com) and the reaction pictures from [Pinterest](https://ph.pinterest.com/ideas/memes/921358921047/). They belong to their original creators and are used here for a personal study tool. If you own one and want it removed, open an issue.
 
 ## Deploying
 
