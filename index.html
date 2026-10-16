@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fff8f0">
 <meta name="description" content="vibereview: a playful reviewer for SIA and Research terms, with Ming the study cat.">
-<title>ayoko na · SIA & Research reviewer</title>
+<title>vibe reviewer · SIA & Research</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M12 30 L15 6 L31 20 Z M52 30 L49 6 L33 20 Z' fill='%23ff8a1f' stroke='%23ff8a1f' stroke-width='5' stroke-linejoin='round'/%3E%3Cellipse cx='32' cy='36' rx='25' ry='21' fill='%23ff8a1f'/%3E%3Cellipse cx='32' cy='45' rx='16' ry='10' fill='%23ffe9cf'/%3E%3Cellipse cx='23' cy='33' rx='7' ry='8' fill='%23fff'/%3E%3Cellipse cx='41' cy='33' rx='7' ry='8' fill='%23fff'/%3E%3Ccircle cx='24' cy='34' r='4.5' fill='%232b2118'/%3E%3Ccircle cx='42' cy='34' r='4.5' fill='%232b2118'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,8 +99,7 @@
   .topbar-in { max-width: 1080px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); }
   .brand { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 1.45rem; color: var(--orange); letter-spacing: -.03em; }
   .brand svg { width: 36px; height: 36px; }
-  .top-stat { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 8px; border-radius: 99px; background: var(--card); border: 2px solid var(--line); font-weight: 900; color: var(--yellow-d); }
-  .top-stat .ic { width: 22px; height: 22px; }
+  .subject-title { position: relative; min-width: 0; }
   body:not(.mode-home) .topbar { display: none; }
   main { max-width: 1080px; margin: 0 auto; padding: 18px 16px 40px; }
 
@@ -122,7 +121,7 @@
   .subjects { display: grid; gap: 16px; }
   .subject { background: var(--card); border: 2px solid var(--line); border-radius: 22px; box-shadow: 0 5px 0 var(--line); overflow: hidden; animation: cardIn .6s var(--spring) both; transition: transform .25s var(--ease-out), box-shadow .25s var(--ease-out); }
   .subject:nth-child(2) { animation-delay: .1s; }
-  .subject-head { position: relative; display: flex; align-items: center; gap: 12px; padding: 16px; color: #fff; overflow: hidden; }
+  .subject-head { position: relative; display: flex; align-items: center; gap: 12px; padding: 16px; min-height: 104px; color: #fff; overflow: hidden; }
   .subject-head::before { content: ""; position: absolute; width: 180px; height: 180px; right: -50px; top: -90px; border-radius: 50%; background: rgba(255,255,255,.14); }
   .s-research .subject-head { background: var(--orange); }
   .s-sia .subject-head { background: var(--blue); }
@@ -163,7 +162,7 @@
   .streak.hot .ic { animation: flicker .9s ease-in-out infinite; }
   .q-main { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
   /* Definition card. Ming peeks over its top edge, gripping it with his paws. */
-  .q-card { position: relative; flex: 0 1 auto; min-height: 120px; display: flex; flex-direction: column; margin-top: 64px;
+  .q-card { position: relative; flex: 0 1 auto; min-height: 84px; display: flex; flex-direction: column; margin-top: 70px;
     background: var(--card); border: 2px solid var(--line); border-radius: 22px; box-shadow: 0 5px 0 var(--line); padding: 26px 16px 16px; }
   .q-label { flex: none; display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; font-size: .74rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--orange-d); }
   .q-label .ic { width: 16px; height: 16px; }
@@ -171,18 +170,26 @@
   .q-body.scrolls { mask-image: linear-gradient(#000 86%, transparent); -webkit-mask-image: linear-gradient(#000 86%, transparent); }
   .q-text { margin: auto 0; font-size: 20px; line-height: 1.48; color: var(--ink); white-space: pre-wrap; overflow-wrap: break-word; }
   .blank { display: inline-block; width: 3.2em; height: 1.05em; vertical-align: -.18em; border-radius: 7px; background: var(--orange-l); box-shadow: inset 0 -3px 0 #ffc896; }
-  .peek { position: absolute; z-index: 2; bottom: calc(100% - 20px); width: 96px; height: 104px; overflow: hidden; pointer-events: none; transition: left .5s var(--spring), right .5s var(--spring); }
-  .peek[data-side="r"] { right: 22px; } .peek[data-side="l"] { left: 22px; } .peek[data-side="c"] { left: calc(50% - 48px); }
-  .peek-in { position: absolute; left: 0; right: 0; bottom: 0; transition: transform .35s var(--ease-out); }
-  .peek.duck .peek-in { transform: translateY(34%); }
+  /* Ming's head is clipped exactly at the card's top edge, so he rises from and ducks behind it. His paws sit in front, over the edge. */
+  .peek { position: absolute; z-index: 2; bottom: calc(100% + 2px); width: 84px; height: 100px; pointer-events: none; transition: left .5s var(--spring), right .5s var(--spring); }
+  .peek[data-side="r"] { right: 22px; } .peek[data-side="l"] { left: 22px; } .peek[data-side="c"] { left: calc(50% - 42px); }
+  .peek-clip { position: absolute; inset: 0; overflow: hidden; }
+  .peek-in { position: absolute; left: 0; right: 0; bottom: -2px; transition: transform .35s var(--ease-out); }
+  .peek.duck .peek-in { transform: translateY(44%); }
+  .peek-paws { position: absolute; left: 0; right: 0; top: calc(100% - 9px); }
+  /* Shown only when a long definition still needs scrolling, so the cut-off text never looks broken */
+  .more { position: absolute; z-index: 2; left: 50%; bottom: 8px; display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 99px; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; box-shadow: 0 3px 0 var(--orange-d); pointer-events: none; opacity: 0; transform: translate(-50%, 6px); transition: opacity .2s ease, transform .25s var(--ease-out); }
+  .more.show { opacity: 1; transform: translate(-50%, 0); animation: nudge 1.6s ease-in-out infinite; }
+  .more .ic { width: 14px; height: 14px; }
+  @keyframes nudge { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 3px); } }
   /* Reaction meme: just the picture, zooming out over the card, then fading away */
   .meme { position: absolute; z-index: 3; left: 50%; top: 50%; pointer-events: none; opacity: 0; transform: translate(-50%, -50%); }
   .meme img { display: block; max-width: min(260px, 60vw); max-height: max(150px, calc(var(--card-h, 220px) * .96)); border-radius: 16px; object-fit: contain; filter: drop-shadow(0 12px 24px rgba(43,33,24,.25)); }
-  .options { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 9px; flex: none; }
+  .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 9px; flex: none; }
   .opt {
     position: relative; display: flex; align-items: center; width: 100%; min-height: 56px; text-align: left;
     padding: 8px 10px 8px 42px; background: var(--card); border: 2px solid var(--line); border-radius: var(--r); box-shadow: 0 4px 0 var(--line);
-    font-weight: 800; font-size: clamp(.85rem, 3.6vw, 1rem); line-height: 1.2; color: var(--ink); overflow-wrap: anywhere;
+    font-weight: 800; font-size: clamp(.85rem, 3.6vw, 1rem); line-height: 1.2; color: var(--ink); overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto;
     transition: transform .1s var(--ease-out), box-shadow .1s var(--ease-out), background-color .2s ease, border-color .2s ease, color .2s ease, opacity .25s ease;
   }
   .opt:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 var(--line); background: var(--soft); border-color: #ffc896; }
@@ -282,8 +289,8 @@
     main, .topbar-in { padding-left: 24px; padding-right: 24px; }
     .quiz-inner { padding: 16px 24px 14px; gap: 12px; }
     .q-main { gap: 16px; }
-    .q-card { margin-top: 74px; padding: 30px 22px 20px; }
-    .peek { width: 116px; height: 126px; } .peek[data-side="c"] { left: calc(50% - 58px); }
+    .q-card { margin-top: 90px; padding: 30px 22px 20px; }
+    .peek { width: 112px; height: 132px; } .peek[data-side="c"] { left: calc(50% - 56px); } .peek-paws { top: calc(100% - 12px); }
     .foot-inner { padding: 16px 24px; padding-bottom: max(16px, env(safe-area-inset-bottom)); min-height: 100px; }
     .foot-icon, .foot-icon .ring { width: 58px; height: 58px; } .foot-icon svg { width: 30px; height: 30px; } .foot-icon .ring { width: 58px; height: 58px; }
     .foot-icon .ring-num { font-size: .8rem; }
@@ -300,7 +307,10 @@
   }
   /* ---------- md: 768px ---------- */
   @media (min-width: 768px) {
-    .subjects { grid-template-columns: 1fr 1fr; }
+    .subjects { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+    /* Both cards share the same rows, so headers, bars and buttons line up across them */
+    .subject { display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 0; }
+    .subject-body { align-content: start; }
     .result-cat { width: 186px; }
   }
   /* ---------- lg: 1024px ---------- */
@@ -309,8 +319,8 @@
     .home-grid { grid-template-columns: 5fr 7fr; gap: 48px; align-items: center; min-height: calc(100dvh - 160px); }
     .hero-cat { width: 196px; }
     .quiz-inner { max-height: 860px; padding-top: 28px; }
-    .peek { width: 128px; height: 140px; } .peek[data-side="c"] { left: calc(50% - 64px); }
-    .q-card { margin-top: 74px; }
+    .peek { width: 128px; height: 150px; } .peek[data-side="c"] { left: calc(50% - 64px); } .peek-paws { top: calc(100% - 13px); }
+    .q-card { margin-top: 104px; }
   }
 </style>
 </head>
@@ -318,8 +328,7 @@
 
 <header class="topbar">
   <div class="topbar-in">
-    <div class="brand"><span data-cathead></span><span>ayoko na</span></div>
-    <div class="top-stat" aria-label="Terms mastered"><span data-icon="crown"></span><span id="topMastered">0</span></div>
+    <div class="brand"><span data-cathead></span><span>vibe reviewer</span></div>
   </div>
 </header>
 
@@ -401,9 +410,10 @@
     </div>
     <div class="q-main">
       <div class="q-card" id="qCard">
-        <div class="peek" id="peek" data-side="r" aria-hidden="true"><div class="peek-in" id="quizCat" data-peek data-mood="idle"></div></div>
+        <div class="peek" id="peek" data-side="r" data-mood="idle" aria-hidden="true"><div class="peek-clip"><div class="peek-in" id="quizCat" data-peekhead></div></div><div class="peek-paws" data-peekpaws></div></div>
         <span class="q-label"><span data-icon="book"></span>Which term fits?</span>
         <div class="q-body" id="qBody"><p class="q-text" id="question"></p></div>
+        <div class="more" id="more" aria-hidden="true">Scroll for more<svg class="ic" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="meme" id="meme" aria-hidden="true"><img alt="" id="memeImg"></div>
       </div>
       <div id="options" class="options" role="group" aria-label="Answer choices"></div>
@@ -865,7 +875,7 @@ const SUBJECTS = {
 };
 
 const INFO = {
-  research: { tag: "Research", title: "Research Methods & Writing", cls: "s-research", art: "research" },
+  research: { tag: "Research", title: "Research", cls: "s-research", art: "research" },
   sia: { tag: "SIA", title: "Systems Integration & Architecture", cls: "s-sia", art: "sia" },
 };
 const SUBJECT_ORDER = ["research", "sia"]; // Research shows first on the home page
@@ -891,7 +901,6 @@ const ICONS = {
   play: `<path d="M8 5.2v13.6a1 1 0 0 0 1.5.8l10.4-6.8a1 1 0 0 0 0-1.6L9.5 4.4A1 1 0 0 0 8 5.2z" fill="currentColor"/>`,
   home: `<path ${S} d="M4 11 12 4l8 7M6.5 9.5V20h11V9.5M10 20v-5h4v5"/>`,
   flame: `<path d="M12 2.5c.6 3.2 4.6 5.4 5.6 9.2A6 6 0 0 1 6.3 15c-.4-2.4.6-4.5 2.2-5.8.1 1.7.9 3 2 3.4-.8-3.6.2-7.3 1.5-10.1z" fill="#ff7a00"/><path d="M12 13.5c1.6 1.2 2.4 2.4 2.1 3.8a2.2 2.2 0 0 1-4.3.1c-.2-1.4.8-2.7 2.2-3.9z" fill="#ffc53d"/>`,
-  crown: `<path d="M3.5 8.5l4.2 3.3L12 5l4.3 6.8 4.2-3.3-1.8 10H5.3z" fill="#ffc53d"/><rect x="5.3" y="18.5" width="13.4" height="2.5" rx="1.2" fill="#e0a100"/>`,
   target: `<g ${S}><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></g><circle cx="12" cy="12" r="1.6" fill="currentColor"/>`,
   repeat: `<g ${S}><path d="M4.5 11a7.5 7.5 0 0 1 13-4.6L19 8"/><path d="M19 3.5V8h-4.5"/><path d="M19.5 13a7.5 7.5 0 0 1-13 4.6L5 16"/><path d="M5 20.5V16h4.5"/></g>`,
   save: `<path ${S} d="M7 3.5h10a1 1 0 0 1 1 1v16l-6-4.2-6 4.2v-16a1 1 0 0 1 1-1z"/>`,
@@ -978,10 +987,10 @@ const CAT = `<svg class="cat" viewBox="0 0 200 232" aria-hidden="true">
     ${CAT_HEAD}
   </g>
 </svg>`;
-// Peeking pose: head and two paws curled over the top edge of the question card.
-const CAT_PEEK = `<svg class="cat" viewBox="0 18 200 170" aria-hidden="true">
-  <g class="all">
-    ${CAT_HEAD}
+// Peeking pose: the head (clipped at the card edge) and, separately, two paws curled over that edge.
+const CAT_PEEK_HEAD = `<svg class="cat" viewBox="0 18 200 152" aria-hidden="true"><g class="all">${CAT_HEAD}</g></svg>`;
+const CAT_PEEK_PAWS = `<svg class="cat" viewBox="0 150 200 38" aria-hidden="true">
+  <g>
     <g class="paw paw-l"><ellipse cx="62" cy="168" rx="24" ry="16" fill="#ff8a1f"/><ellipse cx="62" cy="173" rx="19" ry="10" fill="#ffe9cf"/><path d="M54 167 v8 M62 166 v9 M70 167 v8" stroke="#e2c9ad" stroke-width="2.5" stroke-linecap="round"/></g>
     <g class="paw paw-r"><ellipse cx="138" cy="168" rx="24" ry="16" fill="#ff8a1f"/><ellipse cx="138" cy="173" rx="19" ry="10" fill="#ffe9cf"/><path d="M130 167 v8 M138 166 v9 M146 167 v8" stroke="#e2c9ad" stroke-width="2.5" stroke-linecap="round"/></g>
   </g>
@@ -1013,7 +1022,8 @@ function anim(el, frames, opts) {
 function fillArt(root = document) {
   root.querySelectorAll("[data-icon]").forEach((el) => { el.insertAdjacentHTML("afterbegin", icon(el.dataset.icon)); el.removeAttribute("data-icon"); });
   root.querySelectorAll("[data-cat]").forEach((el) => { el.innerHTML = CAT; el.removeAttribute("data-cat"); });
-  root.querySelectorAll("[data-peek]").forEach((el) => { el.innerHTML = CAT_PEEK; el.removeAttribute("data-peek"); });
+  root.querySelectorAll("[data-peekhead]").forEach((el) => { el.innerHTML = CAT_PEEK_HEAD; el.removeAttribute("data-peekhead"); });
+  root.querySelectorAll("[data-peekpaws]").forEach((el) => { el.innerHTML = CAT_PEEK_PAWS; el.removeAttribute("data-peekpaws"); });
   root.querySelectorAll("[data-cathead]").forEach((el) => { el.innerHTML = CATHEAD; el.removeAttribute("data-cathead"); });
 }
 function setMood(el, mood) {
@@ -1080,16 +1090,15 @@ function showMeme(kind) {
   card.style.setProperty("--card-h", card.clientHeight + "px");
   $("memeImg").src = nextMeme[kind]();
   if (memeAnim) memeAnim.cancel();
-  const hold = kind === "good" ? 1500 : 1100;
-  if (reduceMotion || !m.animate) { m.style.opacity = 1; clearTimeout(showMeme.t); showMeme.t = setTimeout(() => (m.style.opacity = 0), hold + 400); return; }
-  // Starts big and close, zooms out into place, then fades away.
+  const hold = kind === "good" ? 2400 : 1900, enter = 750, exit = 600, total = enter + hold + exit;
+  if (reduceMotion || !m.animate) { m.style.opacity = 1; clearTimeout(showMeme.t); showMeme.t = setTimeout(() => (m.style.opacity = 0), hold); return; }
+  // Slowly zooms out into place, holds, then pushes toward you (zooms in) as it fades away.
   memeAnim = m.animate([
-    { opacity: 0, transform: "translate(-50%, -50%) scale(1.9)" },
-    { opacity: 1, transform: "translate(-50%, -50%) scale(1.15)", offset: .12 },
-    { opacity: 1, transform: "translate(-50%, -50%) scale(1)", offset: .3 },
-    { opacity: 1, transform: "translate(-50%, -50%) scale(.96)", offset: .82 },
-    { opacity: 0, transform: "translate(-50%, -50%) scale(.85)" },
-  ], { duration: hold + 900, easing: "cubic-bezier(.23,1,.32,1)" });
+    { opacity: 0, transform: "translate(-50%, -50%) scale(1.8)", easing: "cubic-bezier(.16,1,.3,1)" },
+    { opacity: 1, transform: "translate(-50%, -50%) scale(1)", offset: enter / total },
+    { opacity: 1, transform: "translate(-50%, -50%) scale(.97)", offset: (enter + hold) / total, easing: "cubic-bezier(.55,0,.75,.3)" },
+    { opacity: 0, transform: "translate(-50%, -50%) scale(1.55)" },
+  ], { duration: total });
 }
 function hideMeme() { if (memeAnim) memeAnim.cancel(); clearTimeout(showMeme.t); $("meme").style.opacity = 0; }
 
@@ -1214,7 +1223,15 @@ function fitQuestion() {
   t.style.fontSize = size + "px";
   while (size > min && body.scrollHeight > body.clientHeight + 1) t.style.fontSize = --size + "px";
   body.classList.toggle("scrolls", body.scrollHeight > body.clientHeight + 1);
+  updateMore();
 }
+// "Scroll for more" shows while there is hidden text below, and hides once you reach the end.
+function updateMore() {
+  const b = $("qBody"), left = b.scrollHeight - b.clientHeight - b.scrollTop;
+  $("more").classList.toggle("show", left > 6);
+  b.classList.toggle("scrolls", left > 6);
+}
+$("qBody").addEventListener("scroll", updateMore, { passive: true });
 new ResizeObserver(() => fitQuestion()).observe($("qMain") || document.querySelector(".q-main"));
 
 /* ---------- Saved progress per subject ----------
@@ -1268,20 +1285,21 @@ async function wipeTo(id, fromEl, before) {
 function renderHome() {
   const box = $("subjects");
   box.replaceChildren();
-  let total = 0, mastered = 0;
+  let total = 0;
   for (const s of SUBJECT_ORDER) {
     const info = INFO[s], n = SUBJECTS[s].length, p = loadProg(s);
     const left = p.queue.length, done = n - left, cleared = left === 0;
-    total += n; mastered += done;
+    const status = p.round ? (cleared ? "All rounds done" : `Round ${p.round + 1} next`) : "Not started";
+    total += n;
     const card = document.createElement("article");
     card.className = "subject " + info.cls;
     card.innerHTML = `
       <div class="subject-head">
-        <div><small>${info.tag} · ${p.round ? (cleared ? "All rounds done" : "Round " + (p.round + 1) + " next") : "Not started"}</small><h3>${info.title}</h3></div>
+        <div class="subject-title"><small>${n} terms</small><h3>${info.title}</h3></div>
         <div class="subject-art">${ART[info.art]}</div>
       </div>
       <div class="subject-body">
-        <div class="bank-row"><span>Question bank</span><b>${left} of ${n} left</b></div>
+        <div class="bank-row"><span>${status}</span><b>${left} of ${n} left</b></div>
         <div class="bar" role="progressbar" aria-label="${info.tag} terms mastered" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${done}"><div data-to="${done / n}"></div></div>
         <div class="subject-actions">
           <button type="button" class="btn ${s === "sia" ? "btn-blue" : "btn-orange"} btn-play">${icon("play")}${cleared ? "Play again" : p.round ? "Continue" : "Start"}</button>
@@ -1300,7 +1318,6 @@ function renderHome() {
     box.append(card);
   }
   $("totalTerms").textContent = `${total} terms`;
-  $("topMastered").textContent = mastered;
   setTimeout(() => box.querySelectorAll("[data-to]").forEach((m) => (m.style.transform = `scaleX(${m.dataset.to})`)), 320);
 }
 
@@ -1365,7 +1382,11 @@ function renderQuestion(animateIn = true) {
     const key = document.createElement("span");
     key.className = "key"; key.textContent = i + 1;
     const text = document.createElement("span");
-    text.textContent = TERMS[opt][0];
+    // Let long names break after a slash ("Hypothesis/Research") instead of mid-word.
+    TERMS[opt][0].split("/").forEach((part, k, all) => {
+      text.append(part + (k < all.length - 1 ? "/" : ""));
+      if (k < all.length - 1) text.append(document.createElement("wbr"));
+    });
     b.append(key, text);
     b.addEventListener("click", () => answer(i));
     box.append(b);
@@ -1375,7 +1396,7 @@ function renderQuestion(animateIn = true) {
   // Ming moves to a new spot on the card each question, then pops up from behind it.
   const peek = $("peek"), cat = $("quizCat");
   peek.classList.remove("duck");
-  cat.dataset.mood = "idle";
+  peek.dataset.mood = "idle";
   peek.dataset.side = pick(["l", "r", "c"].filter((s) => s !== peek.dataset.side));
   const d = animateIn ? 0 : 140;
   anim($("qCard"), [{ opacity: 0, transform: "translateY(-28px) rotate(-1.5deg)" }, { opacity: 1, transform: "translateY(6px)", offset: .6 }, { opacity: 1, transform: "none" }], { duration: 480, delay: d, easing: "cubic-bezier(.23,1,.32,1)", fill: "backwards" });
@@ -1425,7 +1446,7 @@ function answer(i) {
     playSound("wrong");
     showMeme("bad");
     if (navigator.vibrate) navigator.vibrate(60);
-    setMood(cat, "sad");
+    setMood(peek, "sad");
     peek.classList.add("duck");
     setFoot("bad", pick(MSG.wrong) + " Try again.", "That's not it. Pick another answer.");
     return;
@@ -1460,7 +1481,7 @@ function answer(i) {
   showMeme("good");
   updateStreak(firstTry);
   peek.classList.remove("duck");
-  setMood(cat, "happy");
+  setMood(peek, "happy");
   // Ming thumps the card with his paws.
   anim($("qCard"), [{ transform: "none" }, { transform: "translateY(3px)", offset: .2 }, { transform: "none", offset: .4 }, { transform: "translateY(3px)", offset: .6 }, { transform: "none" }], { duration: 520, delay: 120 });
   const bar = $("progress");
