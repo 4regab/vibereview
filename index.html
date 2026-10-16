@@ -10,7 +10,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=202610162055">
+<link rel="stylesheet" href="assets/css/style.css?v=202610162104">
+<script>/* Apply the saved theme before the page paints, so there is no light flash in dark mode. */try{var s=JSON.parse(localStorage.getItem("vr_settings")||"{}");if(s.dark===undefined?matchMedia("(prefers-color-scheme: dark)").matches:s.dark)document.documentElement.dataset.theme="dark"}catch(e){}</script>
 </head>
 <body class="mode-home">
 
@@ -137,6 +138,10 @@
       <div><b>Meme pictures</b><small>Pictures that pop up after an answer</small></div>
       <button class="switch" id="swMemes" type="button" role="switch" aria-checked="true" aria-label="Meme pictures" data-key="memes"><span class="knob"></span></button>
     </div>
+    <div class="set-row">
+      <div><b>Dark mode</b><small>Easier on the eyes at night</small></div>
+      <button class="switch" id="swDark" type="button" role="switch" aria-checked="false" aria-label="Dark mode" data-key="dark" data-plain><span class="knob"></span></button>
+    </div>
     <button id="settingsDone" class="btn btn-orange" type="button">Done</button>
   </div>
 </div>
@@ -145,7 +150,7 @@
 <div id="wipe" aria-hidden="true"><div class="wipe-cat" data-cat data-mood="happy"></div></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
 
-<script src="assets/js/terms.js?v=202610162055"></script>
-<script src="assets/js/app.js?v=202610162055"></script>
+<script src="assets/js/terms.js?v=202610162104"></script>
+<script src="assets/js/app.js?v=202610162104"></script>
 </body>
 </html>

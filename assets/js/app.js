@@ -139,8 +139,9 @@ const store = {
   get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
   set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
 };
-// Player settings (Settings panel on the home page). Both are on unless the player fought the switch and won.
-const settings = { sound: true, memes: true };
+// Player settings (Settings panel on the home page). Sounds and memes are on unless the player fought the switch and won.
+// Dark mode starts from the device's preference until the player picks one.
+const settings = { sound: true, memes: true, dark: matchMedia("(prefers-color-scheme: dark)").matches };
 try { Object.assign(settings, JSON.parse(store.get("vr_settings")) || {}); } catch {}
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
@@ -473,7 +474,7 @@ function setFoot(state, title, sub) {
   if (state === "idle") {
     // A small ring showing how much of the whole bank is mastered.
     const n = TERMS.length, done = n - prog.queue.length, C = 2 * Math.PI * 19;
-    $("footIcon").innerHTML = `<svg class="ring" viewBox="0 0 46 46"><circle cx="23" cy="23" r="19" fill="none" stroke="#f1e1cf" stroke-width="5"/><circle cx="23" cy="23" r="19" fill="none" stroke="#ff7a00" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - done / n)}"/></svg><span class="ring-num">${Math.round((done / n) * 100)}%</span>`;
+    $("footIcon").innerHTML = `<svg class="ring" viewBox="0 0 46 46"><circle cx="23" cy="23" r="19" fill="none" style="stroke: var(--line)" stroke-width="5"/><circle cx="23" cy="23" r="19" fill="none" stroke="#ff7a00" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - done / n)}"/></svg><span class="ring-num">${Math.round((done / n) * 100)}%</span>`;
     return;
   }
   $("footIcon").innerHTML = state === "ok" ? `<svg viewBox="0 0 24 24"><path class="draw" pathLength="1" d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
@@ -809,6 +810,18 @@ const TAPS_TO_OFF = 10;
 const tries = { sound: 0, memes: 0 };
 const setMsg = (text) => { $("setMsg").textContent = text; anim($("setMsg"), [{ opacity: 0, transform: "translateY(4px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" }); };
 const syncSwitches = () => document.querySelectorAll(".switch").forEach((sw) => sw.setAttribute("aria-checked", String(settings[sw.dataset.key])));
+function applyTheme(fromEl) {
+  const set = () => {
+    document.documentElement.dataset.theme = settings.dark ? "dark" : "light";
+    document.querySelector('meta[name="theme-color"]').content = settings.dark ? "#15100c" : "#fff8f0";
+  };
+  if (!fromEl || reduceMotion || !document.startViewTransition) return set();
+  const r = fromEl.getBoundingClientRect();
+  document.documentElement.style.setProperty("--vt-x", r.left + r.width / 2 + "px");
+  document.documentElement.style.setProperty("--vt-y", r.top + r.height / 2 + "px");
+  document.startViewTransition(set);
+}
+applyTheme();
 function sendHome(sw) { sw.style.transform = ""; sw.dx = sw.dy = 0; sw.classList.remove("fled"); }
 function flee(sw) {
   // Pick a spot that keeps the whole switch on screen and is far from where it is now.
@@ -825,6 +838,14 @@ function flee(sw) {
 }
 document.querySelectorAll(".switch").forEach((sw) => sw.addEventListener("click", () => {
   const key = sw.dataset.key, cat = $("setCat"), name = key === "sound" ? "Sounds" : "Memes";
+  // Dark mode is a normal switch: one tap, with the new colours spreading out from it.
+  if ("plain" in sw.dataset) {
+    settings[key] = !settings[key];
+    store.set("vr_settings", JSON.stringify(settings)); syncSwitches();
+    applyTheme(sw);
+    setMood(cat, "happy");
+    return setMsg(settings.dark ? "Dark mode on. Ang ganda!" : "Light mode on. Ang liwanag!");
+  }
   if (!settings[key]) {
     settings[key] = true; tries[key] = 0;
     store.set("vr_settings", JSON.stringify(settings)); syncSwitches(); setMood(cat, "happy");
