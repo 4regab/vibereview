@@ -14,6 +14,7 @@ A quiz site for reviewing **Research** and **SIA** (Systems Integration & Archit
 - **Progress saves.** Your bank and round number are stored in your browser, so you can stop and come back later. "Restart" on a subject clears its progress.
 - **No giveaways.** If a definition contains the answer's own words, those words are blanked out.
 - **One screen.** The question and its choices fit on one screen on phones, tablets and desktops. The few very long definitions scroll inside their card and show a "Scroll for more" hint.
+- **Settings (gear, top right of the home page).** Switches for sounds and meme pictures. Turning one off is a little game: the switch runs to a random spot the first 4 times you tap it, and the 5th tap turns it off. Turning it back on takes one tap. The choice is saved in your browser.
 
 Keyboard: press <kbd>1</kbd> to <kbd>4</kbd> to answer and <kbd>Enter</kbd> for the next question.
 

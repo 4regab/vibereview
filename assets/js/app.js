@@ -25,6 +25,7 @@ const ICONS = {
   arrow: `<path ${S} d="M5 12h13M13 6.5l5.5 5.5-5.5 5.5"/>`,
   play: `<path d="M8 5.2v13.6a1 1 0 0 0 1.5.8l10.4-6.8a1 1 0 0 0 0-1.6L9.5 4.4A1 1 0 0 0 8 5.2z" fill="currentColor"/>`,
   home: `<path ${S} d="M4 11 12 4l8 7M6.5 9.5V20h11V9.5M10 20v-5h4v5"/>`,
+  gear: `<g ${S} stroke-width="2.4"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3 5.5 5.5"/><circle cx="12" cy="12" r="6.6"/></g>`,
   flame: `<path d="M12 2.5c.6 3.2 4.6 5.4 5.6 9.2A6 6 0 0 1 6.3 15c-.4-2.4.6-4.5 2.2-5.8.1 1.7.9 3 2 3.4-.8-3.6.2-7.3 1.5-10.1z" fill="#ff7a00"/><path d="M12 13.5c1.6 1.2 2.4 2.4 2.1 3.8a2.2 2.2 0 0 1-4.3.1c-.2-1.4.8-2.7 2.2-3.9z" fill="#ffc53d"/>`,
   target: `<g ${S}><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></g><circle cx="12" cy="12" r="1.6" fill="currentColor"/>`,
   repeat: `<g ${S}><path d="M4.5 11a7.5 7.5 0 0 1 13-4.6L19 8"/><path d="M19 3.5V8h-4.5"/><path d="M19.5 13a7.5 7.5 0 0 1-13 4.6L5 16"/><path d="M5 20.5V16h4.5"/></g>`,
@@ -138,6 +139,9 @@ const store = {
   get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
   set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
 };
+// Player settings (Settings panel on the home page). Both are on unless the player fought the switch and won.
+const settings = { sound: true, memes: true };
+try { Object.assign(settings, JSON.parse(store.get("vr_settings")) || {}); } catch {}
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -202,6 +206,7 @@ let playing = null;
 function stopSound() { if (playing) { playing.pause(); playing.currentTime = 0; playing = null; } }
 function playSound(kind) {
   stopSound();
+  if (!settings.sound) return;
   playing = nextSound[kind]();
   playing.play().catch(() => {});
 }
@@ -219,6 +224,7 @@ function makeImgBag(prefix, count) {
 const nextMeme = { good: makeImgBag("good", 10), bad: makeImgBag("bad", 11) };
 let memeAnim = null;
 function showMeme(kind) {
+  if (!settings.memes) return;
   const m = $("meme"), card = $("qCard");
   // The picture is centred in the free space between the top bar and the bottom of the card, and zooms from its centre.
   // It is sized so that even at its biggest (EXIT) it never reaches the choices below.
@@ -794,6 +800,65 @@ const goHome = (e) => wipeTo("home", e.currentTarget, renderHome);
 $("homeBtn").addEventListener("click", goHome);
 $("homeTopBtn").addEventListener("click", goHome);
 document.fonts && document.fonts.ready.then(fitQuestion);
+
+/* ---------- Settings: a switch runs to a random spot the first 4 times you try to turn it off ---------- */
+const TEASE = ["Ayaw ko!", "Sure ka? Sayang ang vibes.", "Habol ka muna!", "Isa pa... last na talaga?"];
+const TAPS_TO_OFF = 5;
+const tries = { sound: 0, memes: 0 };
+const setMsg = (text) => { $("setMsg").textContent = text; anim($("setMsg"), [{ opacity: 0, transform: "translateY(4px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" }); };
+const syncSwitches = () => document.querySelectorAll(".switch").forEach((sw) => sw.setAttribute("aria-checked", String(settings[sw.dataset.key])));
+function sendHome(sw) { sw.style.transform = ""; sw.dx = sw.dy = 0; sw.classList.remove("fled"); }
+function flee(sw) {
+  // Pick a spot that keeps the whole switch on screen and is far from where it is now.
+  const r = sw.getBoundingClientRect(), pad = 14;
+  const homeX = r.left - (sw.dx || 0), homeY = r.top - (sw.dy || 0);
+  let x, y, n = 0;
+  do {
+    x = pad + Math.random() * (innerWidth - r.width - pad * 2);
+    y = pad + Math.random() * (innerHeight - r.height - pad * 2);
+  } while (Math.hypot(x - r.left, y - r.top) < Math.min(160, innerWidth / 3) && ++n < 20);
+  sw.dx = x - homeX; sw.dy = y - homeY;
+  sw.classList.add("fled");
+  sw.style.transform = `translate(${sw.dx}px, ${sw.dy}px) rotate(${(Math.random() * 24 - 12).toFixed(1)}deg)`;
+}
+document.querySelectorAll(".switch").forEach((sw) => sw.addEventListener("click", () => {
+  const key = sw.dataset.key, cat = $("setCat"), name = key === "sound" ? "Sounds" : "Memes";
+  if (!settings[key]) {
+    settings[key] = true; tries[key] = 0;
+    store.set("vr_settings", JSON.stringify(settings)); syncSwitches(); setMood(cat, "happy");
+    return setMsg(`Yay! ${name} are back.`);
+  }
+  tries[key]++;
+  if (tries[key] < TAPS_TO_OFF) {
+    flee(sw); setMood(cat, "sad");
+    const left = TAPS_TO_OFF - tries[key];
+    return setMsg(`${TEASE[tries[key] - 1]} Tap ${left} more ${left === 1 ? "time" : "times"} to turn ${name.toLowerCase()} off.`);
+  }
+  settings[key] = false; tries[key] = 0;
+  if (key === "sound") stopSound();
+  store.set("vr_settings", JSON.stringify(settings)); syncSwitches(); sendHome(sw); setMood(cat, "sad");
+  setMsg(key === "sound" ? "Fine. Sounds off. Ang tahimik..." : "Fine. No more memes. Boring.");
+}));
+function openSettings() {
+  syncSwitches();
+  $("settings").classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+  $("setCat").dataset.mood = "idle";
+  $("setMsg").textContent = "Sounds and memes make the review fun. Sure ka?";
+  anim(document.querySelector(".settings-card"), [{ opacity: 0, transform: "scale(.85) translateY(20px)" }, { opacity: 1, transform: "none" }], { duration: 420, easing: "cubic-bezier(.34,1.56,.64,1)" });
+  $("swSound").focus();
+}
+function closeSettings() {
+  document.querySelectorAll(".switch").forEach(sendHome);
+  tries.sound = tries.memes = 0;
+  $("settings").classList.add("hidden");
+  document.body.style.overflow = "";
+  $("settingsBtn").focus();
+}
+$("settingsBtn").addEventListener("click", openSettings);
+$("settingsDone").addEventListener("click", closeSettings);
+$("settings").addEventListener("click", (e) => { if (e.target === $("settings")) closeSettings(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("settings").classList.contains("hidden")) closeSettings(); });
 
 document.addEventListener("keydown", (e) => {
   if ($("quiz").classList.contains("hidden") || e.ctrlKey || e.metaKey || e.altKey) return;

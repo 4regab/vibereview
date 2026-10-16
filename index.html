@@ -17,6 +17,7 @@
 <header class="topbar">
   <div class="topbar-in">
     <div class="brand"><span data-cathead></span><span>vibe reviewer</span></div>
+    <button id="settingsBtn" class="icon-btn gear" type="button" aria-label="Settings" aria-haspopup="dialog" data-icon="gear"></button>
   </div>
 </header>
 
@@ -116,6 +117,25 @@
     </div>
   </div>
 </section>
+
+<!-- ===== Settings: the switches run away when you try to turn things off ===== -->
+<div id="settings" class="settings hidden" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+  <div class="settings-card">
+    <div class="settings-head">
+      <div class="settings-cat" id="setCat" data-cat data-mood="idle"></div>
+      <div class="settings-bubble"><h2 id="setTitle">Settings</h2><p id="setMsg" aria-live="polite">Sounds and memes make the review fun. Sure ka?</p></div>
+    </div>
+    <div class="set-row">
+      <div><b>Sounds</b><small>Reactions when you answer</small></div>
+      <button class="switch" id="swSound" type="button" role="switch" aria-checked="true" aria-label="Sounds" data-key="sound"><span class="knob"></span></button>
+    </div>
+    <div class="set-row">
+      <div><b>Meme pictures</b><small>Pictures that pop up after an answer</small></div>
+      <button class="switch" id="swMemes" type="button" role="switch" aria-checked="true" aria-label="Meme pictures" data-key="memes"><span class="knob"></span></button>
+    </div>
+    <button id="settingsDone" class="btn btn-orange" type="button">Done</button>
+  </div>
+</div>
 
 <div id="toast" class="toast" aria-hidden="true"></div>
 <div id="wipe" aria-hidden="true"><div class="wipe-cat" data-cat data-mood="happy"></div></div>

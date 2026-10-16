@@ -366,3 +366,23 @@ kbd { font-family: var(--font); font-weight: 900; padding: 0 6px; border-radius:
 .embers i:nth-child(1) { --dx: -9px; } .embers i:nth-child(2) { --dx: 6px; animation-delay: .5s !important; } .embers i:nth-child(3) { --dx: -2px; animation-delay: 1s !important; width: 3px; height: 3px; }
 @keyframes ember { 0% { opacity: 0; transform: translate(0, 0) scale(1); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), -28px) scale(.2); } }
 @media (prefers-reduced-motion: reduce) { .flame *, .embers i { animation: none !important; } }
+/* ---------- Settings panel ---------- */
+.settings { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: rgba(43, 33, 24, .45); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); overflow: hidden; }
+.settings-card { width: min(420px, 100%); display: grid; gap: 12px; padding: 18px; background: var(--card); border: 2px solid var(--line); border-radius: 24px; box-shadow: 0 6px 0 var(--line), 0 24px 60px rgba(43, 33, 24, .3); }
+.settings-head { display: flex; align-items: flex-end; gap: 10px; }
+.settings-cat { width: 78px; flex: none; }
+.settings-bubble { flex: 1; min-width: 0; }
+.settings-bubble h2 { font-size: 1.35rem; }
+.settings-bubble p { margin: 2px 0 6px; min-height: 4.1em; color: var(--muted); font-size: .9rem; line-height: 1.35; }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 2px solid var(--line); border-radius: var(--r); }
+.set-row b { display: block; color: var(--ink); }
+.set-row small { display: block; color: var(--muted); font-size: .8rem; line-height: 1.3; }
+.switch { position: relative; z-index: 2; width: 60px; height: 34px; flex: none; padding: 0; border: 0; border-radius: 99px; background: #d9c7b3; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .12); transition: background-color .2s ease, transform .5s var(--spring), box-shadow .3s ease; }
+.switch[aria-checked="true"] { background: var(--orange); }
+.switch .knob { position: absolute; top: 4px; left: 4px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 2px 0 rgba(0, 0, 0, .15); transition: transform .25s var(--spring); }
+.switch[aria-checked="true"] .knob { transform: translateX(26px); }
+.switch.fled { box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .12), 0 10px 24px rgba(43, 33, 24, .35); }
+#settingsDone { width: 100%; margin-top: 4px; }
+.gear .ic { transition: transform .5s var(--spring); }
+@media (hover: hover) and (pointer: fine) { .gear:hover .ic { transform: rotate(70deg); } }
+@media (prefers-reduced-motion: reduce) { .switch, .switch .knob { transition: none; } }
