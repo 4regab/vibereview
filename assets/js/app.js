@@ -229,6 +229,8 @@ let memeAnim = null;
 function showMeme(kind) {
   if (!settings.memes) return;
   const m = $("meme"), card = $("qCard");
+  // A picture that is still showing plays to its end. A new one never cuts it off, so fast taps don't flip pictures.
+  if ((memeAnim && memeAnim.playState === "running") || m.style.opacity === "1") return;
   // The picture is centred in the free space between the top bar and the bottom of the card, and zooms from its centre.
   // It is sized so that even at its biggest (EXIT) it never reaches the choices below.
   const EXIT = 1.28, c = card.getBoundingClientRect(), top = document.querySelector(".quiz-top").getBoundingClientRect().bottom + 8, bottom = c.bottom - 6;
