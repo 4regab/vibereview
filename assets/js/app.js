@@ -801,9 +801,9 @@ $("homeBtn").addEventListener("click", goHome);
 $("homeTopBtn").addEventListener("click", goHome);
 document.fonts && document.fonts.ready.then(fitQuestion);
 
-/* ---------- Settings: a switch runs to a random spot the first 4 times you try to turn it off ---------- */
-const TEASE = ["Ayaw ko!", "Sure ka? Sayang ang vibes.", "Habol ka muna!", "Isa pa... last na talaga?"];
-const TAPS_TO_OFF = 5;
+/* ---------- Settings: a switch runs to a random spot the first 9 times you try to turn it off ---------- */
+const TEASE = ["Ayaw ko!", "Sure ka? Sayang ang vibes.", "Habol ka muna!", "Hindi mo ako mahuhuli.", "Bakit mo ako ginaganito?", "Ang kulit mo ha.", "Sige, takbo pa ako.", "Pagod na ako...", "Last na talaga?"];
+const TAPS_TO_OFF = 10;
 const tries = { sound: 0, memes: 0 };
 const setMsg = (text) => { $("setMsg").textContent = text; anim($("setMsg"), [{ opacity: 0, transform: "translateY(4px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" }); };
 const syncSwitches = () => document.querySelectorAll(".switch").forEach((sw) => sw.setAttribute("aria-checked", String(settings[sw.dataset.key])));
@@ -831,8 +831,7 @@ document.querySelectorAll(".switch").forEach((sw) => sw.addEventListener("click"
   tries[key]++;
   if (tries[key] < TAPS_TO_OFF) {
     flee(sw); setMood(cat, "sad");
-    const left = TAPS_TO_OFF - tries[key];
-    return setMsg(`${TEASE[tries[key] - 1]} Tap ${left} more ${left === 1 ? "time" : "times"} to turn ${name.toLowerCase()} off.`);
+    return setMsg(TEASE[(tries[key] - 1) % TEASE.length]);
   }
   settings[key] = false; tries[key] = 0;
   if (key === "sound") stopSound();
