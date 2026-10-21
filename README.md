@@ -1,18 +1,18 @@
 # vibe reviewer
 
-A quiz site for reviewing **Research** and **SIA** (Systems Integration & Architecture) terms. Ming, the study cat, gives you a definition and you pick the matching term.
+A quiz site for reviewing **Research**, **SIA** (Systems Integration & Architecture) and **Disaster Communication** terms. Ming, the study cat, gives you a definition and you pick the matching term.
 
 **Live site:** https://4regab.github.io/vibereview/
 
 ## How it works
 
-- **Rounds of 10.** Each subject has a question bank: 138 Research questions and 49 SIA questions. Every round takes the next 10 from the bank.
+- **Rounds of 10.** Each subject has a question bank: 138 Research questions, 49 SIA questions and 69 Disaster Communication questions. Every round takes the next 10 from the bank.
 - **Two kinds of question.** Most questions show a definition with four possible terms. SIA also has a **matching set**: tap a company (Netflix, Uber, TikTok, Amazon), then the tech it is known for.
 - **Wrong? Try again.** A wrong pick locks that choice, and a wrong pair shakes and unlocks. You keep going until you get it right.
 - **Missed questions come back.** A question you get right on the first try leaves the bank. A question you miss goes to the back of the bank and shows up in a later round.
 - **Try the round again.** The results screen lets you replay the same 10 questions. First-try answers in a replay also count toward the bank.
 - **Progress saves.** Your bank and round number are stored in your browser, so you can stop and come back later. "Restart" on a subject clears its progress.
-- **No giveaways.** If a definition contains the answer's own words, those words are blanked out.
+- **No giveaways.** If a definition contains the answer's own words, those words are blanked out. An entry can list extra phrases to blank (an acronym, a singular form), see "Edit the questions".
 - **One screen.** The question and its choices fit on one screen on phones, tablets and desktops. The few very long definitions scroll inside their card and show a "Scroll for more" hint.
 - **Settings (gear, top right of the home page).** Switches for sounds and meme pictures. Turning one off is a little game: the switch runs to a random spot the first 9 times you tap it, and the 10th tap turns it off. Turning it back on takes one tap. The choice is saved in your browser.
 
@@ -44,13 +44,19 @@ Then open http://localhost:8000. Opening `index.html` straight from disk also wo
 
 ## Edit the questions
 
-Open `assets/js/terms.js`. Each subject is a list. An entry is either a term and its definition:
+Open `assets/js/terms.js`. Each subject is a list. An entry is a term and its definition:
 
 ```js
 ["Circuit Breaker", "Stops calling a failing service to prevent cascading failures."],
 ```
 
-or a matching set. Each pair is `[left tile, small hint, right tile]`:
+The term's own name is blanked out of its definition by itself. If the definition hides the answer in a form the app cannot match (an acronym like "PIO", a singular form, a short phrase from the name), add those words as a third item:
+
+```js
+["Public Information Officer", "The Public Information Officer manages ... only one PIO should be designated.", ["PIO"]],
+```
+
+An entry can also be a matching set. Each pair is `[left tile, small hint, right tile]`:
 
 ```js
 { match: "Company and tech", prompt: "Match each company to the tech it is known for.",

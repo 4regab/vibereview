@@ -1,9 +1,10 @@
 // vibe reviewer: quiz logic. The question banks live in terms.js, loaded first.
 const INFO = {
-  research: { tag: "Research", title: "Research", cls: "s-research", art: "research" },
-  sia: { tag: "SIA", title: "Systems Integration & Architecture", cls: "s-sia", art: "sia" },
+  research: { tag: "Research", title: "Research", cls: "s-research", art: "research", btn: "btn-orange", color: "var(--orange)" },
+  sia: { tag: "SIA", title: "Systems Integration & Architecture", cls: "s-sia", art: "sia", btn: "btn-blue", color: "var(--blue)" },
+  disaster: { tag: "Disaster", title: "Disaster Communication", cls: "s-disaster", art: "disaster", btn: "btn-green", color: "var(--green)" },
 };
-const SUBJECT_ORDER = ["research", "sia"]; // Research shows first on the home page
+const SUBJECT_ORDER = ["research", "sia", "disaster"]; // Research shows first on the home page
 const ROUND_SIZE = 10;
 // The "first" clips play first, in order; after that every clip plays once before any repeats.
 const SOUNDS = {
@@ -57,6 +58,11 @@ const ART = {
     <rect x="68" y="10" width="44" height="30" rx="9" fill="#ffc53d"/><circle cx="80" cy="25" r="5" fill="#fff"/><path d="M90 25h12" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
     <rect x="34" y="56" width="52" height="17" rx="7" fill="#ff7a00"/><rect x="34" y="76" width="52" height="17" rx="7" fill="#d65f00"/>
     <circle cx="45" cy="64.5" r="3" fill="#fff"/><circle cx="45" cy="84.5" r="3" fill="#fff"/></svg>`,
+  disaster: `<svg viewBox="0 0 120 100" aria-hidden="true">
+    <path d="M14 38h18l34-18v60L32 62H14a6 6 0 0 1-6-6V44a6 6 0 0 1 6-6z" fill="#fff"/>
+    <rect x="66" y="16" width="10" height="68" rx="5" fill="#ffc53d"/>
+    <path d="M22 62l6 22a5 5 0 0 0 5 4h6a4 4 0 0 0 4-5l-5-21z" fill="#ffc53d"/>
+    <path d="M87.8 38.4A18 18 0 0 1 87.8 61.6M97 30.7A30 30 0 0 1 97 69.3M106.2 23A42 42 0 0 1 106.2 77" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".9"/></svg>`,
 };
 
 /* Ming the study cat. One head is shared by the full body (home, results) and the peeking pose (quiz).
@@ -316,13 +322,14 @@ function flyPlus(fromEl, toEl) {
 // Builds a function that hides a term inside its own definition.
 // Only the full name is hidden (plus its alternate names and acronym). Single words from a longer
 // term are left alone, so "Lightweight Evaluation Alternatives" can still say "evaluation methods".
+// An entry can list more phrases to hide as a third item: ["Term", "Definition", ["PIO", "other form"]].
 function makeMasker() {
   const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const flex = (phrase) => phrase.trim().split(/[\s\-\u2011\/]+/).map(esc).join("[\\s\\-\\u2011\\/]+");
   const isAcronym = (p) => /^[A-Z][A-Za-z]*[A-Z]s?$/.test(p) || /^[A-Z]{2,}s?$/.test(p);
-  return (term, def) => {
+  return (term, def, extra = []) => {
     const base = term.replace(/\s*\([^)]*\)\s*/g, " ").trim();
-    const names = new Set([term, base]);
+    const names = new Set([term, base, ...extra]);
     // Alternate names written into the term, e.g. "ADR, Architecture Decision Record" or "Message Broker / Message Oriented Middleware".
     base.split(/\s*[\/,]\s*/).forEach((p) => (p.split(/\s+/).length > 1 || isAcronym(p)) && names.add(p));
     (term.match(/\(([^)]+)\)/g) || []).forEach((p) => {
@@ -436,7 +443,7 @@ function renderHome() {
         <div class="bank-row"><span>${status}</span><b>${left} of ${n} left</b></div>
         <div class="bar" role="progressbar" aria-label="${info.tag} terms mastered" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${done}"><div data-to="${done / n}"></div></div>
         <div class="subject-actions">
-          <button type="button" class="btn ${s === "sia" ? "btn-blue" : "btn-orange"} btn-play">${icon("play")}${cleared ? "Play again" : p.round ? "Continue" : "Start"}</button>
+          <button type="button" class="btn ${info.btn} btn-play">${icon("play")}${cleared ? "Play again" : p.round ? "Continue" : "Start"}</button>
           ${p.round ? '<button type="button" class="link-btn">Restart</button>' : ""}
         </div>
       </div>`;
@@ -504,7 +511,7 @@ function renderQuestion(animateIn = true) {
   const q = $("question");
   q.replaceChildren();
   if (current.match) q.textContent = entry.prompt;
-  else maskTerm(entry[0], entry[1]).split("\u0000").forEach((part, i) => {
+  else maskTerm(entry[0], entry[1], entry[2]).split("\u0000").forEach((part, i) => {
     if (i) { const b = document.createElement("span"); b.className = "blank"; b.setAttribute("aria-label", "blank"); q.append(b); }
     q.append(part);
   });
@@ -747,7 +754,7 @@ function renderResults() {
   $("bankLeftText").textContent = `${left} left`;
   $("bankMeter").style.transform = "scaleX(0)";
   $("bankMeter").dataset.to = (n - left) / n;
-  $("bankMeter").style.background = subject === "sia" ? "var(--blue)" : "var(--orange)";
+  $("bankMeter").style.background = INFO[subject].color;
   $("bankMastered").textContent = `${n - left} of ${n} terms mastered`;
   const secs = Math.round((Date.now() - startedAt) / 1000);
   $("statCorrect").textContent = score;
