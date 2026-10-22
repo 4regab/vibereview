@@ -1,13 +1,13 @@
 # vibe reviewer
 
-A quiz site for reviewing **Research**, **SIA** (Systems Integration & Architecture) and **Disaster Communication** terms. Ming, the study cat, gives you a definition and you pick the matching term.
+A quiz site for reviewing **Systems Analysis & Design** terms. Ming, the study cat, gives you a definition and you pick the matching term.
 
 **Live site:** https://4regab.github.io/vibereview/
 
 ## How it works
 
-- **Rounds of 10.** Each subject has a question bank: 138 Research questions, 49 SIA questions and 69 Disaster Communication questions. Every round takes the next 10 from the bank.
-- **Two kinds of question.** Most questions show a definition with four possible terms. SIA also has a **matching set**: tap a company (Netflix, Uber, TikTok, Amazon), then the tech it is known for.
+- **Rounds of 10.** The question bank has 146 Systems Analysis & Design questions. Every round takes the next 10 from the bank.
+- **Definition questions.** Each question shows a definition with four possible terms. The app can also show a **matching set** (tap a left tile, then its match). The current bank has none, see "Edit the questions".
 - **Wrong? Try again.** A wrong pick locks that choice, and a wrong pair shakes and unlocks. You keep going until you get it right.
 - **Missed questions come back.** A question you get right on the first try leaves the bank. A question you miss goes to the back of the bank and shows up in a later round.
 - **Try the round again.** The results screen lets you replay the same 10 questions. First-try answers in a replay also count toward the bank.

@@ -1,10 +1,8 @@
 // vibe reviewer: quiz logic. The question banks live in terms.js, loaded first.
 const INFO = {
-  research: { tag: "Research", title: "Research", cls: "s-research", art: "research", btn: "btn-orange", color: "var(--orange)" },
-  sia: { tag: "SIA", title: "Systems Integration & Architecture", cls: "s-sia", art: "sia", btn: "btn-blue", color: "var(--blue)" },
-  disaster: { tag: "Disaster", title: "Disaster Communication", cls: "s-disaster", art: "disaster", btn: "btn-green", color: "var(--green)" },
+  sad: { tag: "Systems", title: "Systems Analysis & Design", cls: "s-sad", art: "sad", btn: "btn-blue", color: "var(--blue)" },
 };
-const SUBJECT_ORDER = ["research", "sia", "disaster"]; // Research shows first on the home page
+const SUBJECT_ORDER = ["sad"]; // the subjects on the home page, in order
 const ROUND_SIZE = 10;
 // The "first" clips play first, in order; after that every clip plays once before any repeats.
 const SOUNDS = {
@@ -46,23 +44,12 @@ const FLAME = `<span class="flame" aria-hidden="true"><svg viewBox="0 0 32 40">
 </svg></span>`;
 
 const ART = {
-  research: `<svg viewBox="0 0 120 100" aria-hidden="true">
-    <path d="M30 8h24M36 8v26L14 78a8 8 0 0 0 7 12h42a8 8 0 0 0 7-12L48 34V8" fill="#fff" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
-    <path d="M24 60h36l10 20a6 6 0 0 1-5 8H21a6 6 0 0 1-5-8z" fill="#2f80ed"/>
-    <circle cx="34" cy="72" r="4" fill="#e2eeff"/><circle cx="48" cy="79" r="3" fill="#e2eeff"/>
-    <circle cx="86" cy="40" r="20" fill="#ffc53d"/><circle cx="86" cy="40" r="11" fill="#fff"/>
-    <path d="M100 55l12 14" stroke="#ffc53d" stroke-width="9" stroke-linecap="round"/></svg>`,
-  sia: `<svg viewBox="0 0 120 100" aria-hidden="true">
+  sad: `<svg viewBox="0 0 120 100" aria-hidden="true">
     <path d="M30 36 L60 62 M90 36 L60 62" stroke="#fff" stroke-width="5" stroke-dasharray="2 8" stroke-linecap="round" opacity=".8"/>
     <rect x="8" y="10" width="44" height="30" rx="9" fill="#fff"/><path d="M17 22h18M17 30h10" stroke="#1d5fc2" stroke-width="4" stroke-linecap="round"/>
     <rect x="68" y="10" width="44" height="30" rx="9" fill="#ffc53d"/><circle cx="80" cy="25" r="5" fill="#fff"/><path d="M90 25h12" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
     <rect x="34" y="56" width="52" height="17" rx="7" fill="#ff7a00"/><rect x="34" y="76" width="52" height="17" rx="7" fill="#d65f00"/>
     <circle cx="45" cy="64.5" r="3" fill="#fff"/><circle cx="45" cy="84.5" r="3" fill="#fff"/></svg>`,
-  disaster: `<svg viewBox="0 0 120 100" aria-hidden="true">
-    <path d="M14 38h18l34-18v60L32 62H14a6 6 0 0 1-6-6V44a6 6 0 0 1 6-6z" fill="#fff"/>
-    <rect x="66" y="16" width="10" height="68" rx="5" fill="#ffc53d"/>
-    <path d="M22 62l6 22a5 5 0 0 0 5 4h6a4 4 0 0 0 4-5l-5-21z" fill="#ffc53d"/>
-    <path d="M87.8 38.4A18 18 0 0 1 87.8 61.6M97 30.7A30 30 0 0 1 97 69.3M106.2 23A42 42 0 0 1 106.2 77" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".9"/></svg>`,
 };
 
 /* Ming the study cat. One head is shared by the full body (home, results) and the peeking pose (quiz).
@@ -323,6 +310,7 @@ function flyPlus(fromEl, toEl) {
 // Only the full name is hidden (plus its alternate names and acronym). Single words from a longer
 // term are left alone, so "Lightweight Evaluation Alternatives" can still say "evaluation methods".
 // An entry can list more phrases to hide as a third item: ["Term", "Definition", ["PIO", "other form"]].
+// The full name matches in any letter case; other short all-capital phrases (like "IS" or "UI") match only in capitals, so plain words such as "is" stay.
 function makeMasker() {
   const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const flex = (phrase) => phrase.trim().split(/[\s\-\u2011\/]+/).map(esc).join("[\\s\\-\\u2011\\/]+");
@@ -330,6 +318,7 @@ function makeMasker() {
   return (term, def, extra = []) => {
     const base = term.replace(/\s*\([^)]*\)\s*/g, " ").trim();
     const names = new Set([term, base, ...extra]);
+    const flags = (p) => (p !== term && p !== base && /^[A-Z]{2,4}s?$/.test(p) ? "g" : "gi");
     // Alternate names written into the term, e.g. "ADR, Architecture Decision Record" or "Message Broker / Message Oriented Middleware".
     base.split(/\s*[\/,]\s*/).forEach((p) => (p.split(/\s+/).length > 1 || isAcronym(p)) && names.add(p));
     (term.match(/\(([^)]+)\)/g) || []).forEach((p) => {
@@ -338,7 +327,7 @@ function makeMasker() {
     });
     let out = def;
     [...names].filter((p) => p.length > 1).sort((a, b) => b.length - a.length).forEach((p) => {
-      out = out.replace(new RegExp("(^|[^A-Za-z0-9])" + flex(p) + "(?:s|es)?(?=$|[^A-Za-z0-9])", "gi"), "$1\u0000");
+      out = out.replace(new RegExp("(^|[^A-Za-z0-9])" + flex(p) + "(?:s|es)?(?=$|[^A-Za-z0-9])", flags(p)), "$1\u0000");
     });
     return out.replace(/\u0000(?:[\s\-\/]*\u0000)+/g, "\u0000");
   };
@@ -392,7 +381,7 @@ function loadProg(s) {
 const saveProg = (s, p) => store.set(progKey(s), JSON.stringify(p));
 
 /* ---------- State ---------- */
-let subject = "research", TERMS = [], prog = null, retrying = false;
+let subject = "sad", TERMS = [], prog = null, retrying = false;
 let order = [], pos = 0, score = 0, missed = [], answered = false, current = null, busy = false;
 let streak = 0, bestStreak = 0, startedAt = 0;
 
