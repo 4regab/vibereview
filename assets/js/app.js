@@ -1,8 +1,9 @@
 // vibe reviewer: quiz logic. The question banks live in terms.js, loaded first.
 const INFO = {
   lit: { tag: "GE2506", title: "Literature: Enlightenment to Realism", cls: "s-lit", art: "lit", btn: "btn-green", color: "var(--green)" },
+  adv: { tag: "AS2602", title: "Advertising: Ethics, Regulation and Privacy", cls: "s-adv", art: "adv", btn: "btn-purple", color: "var(--purple)" },
 };
-const SUBJECT_ORDER = ["lit"]; // the subjects on the home page, in order
+const SUBJECT_ORDER = ["lit", "adv"]; // the subjects on the home page, in order
 const ROUND_SIZE = 10;
 // The "first" clips play first, in order; after that every clip plays once before any repeats.
 const SOUNDS = {
@@ -49,6 +50,11 @@ const ART = {
     <path d="M60 26v62" stroke="#0b6a3a" stroke-width="3" opacity=".35"/>
     <path d="M22 34c10-2 20-1 28 3M22 46c10-2 20-1 28 3M22 58c10-2 20-1 28 3M70 37c8-4 18-5 28-3M70 49c8-4 18-5 28-3" stroke="#128a4f" stroke-width="3.5" stroke-linecap="round" opacity=".55"/>
     <path d="M84 14h14v34l-7-6-7 6z" fill="#ffc53d"/></svg>`,
+  adv: `<svg viewBox="0 0 120 100" aria-hidden="true">
+    <path d="M14 40h18l46-24v68L32 60H14a6 6 0 0 1-6-6V46a6 6 0 0 1 6-6z" fill="#fff"/>
+    <path d="M24 60l8 24h12l-6-24z" fill="#ffc53d"/>
+    <rect x="76" y="12" width="12" height="76" rx="6" fill="#fff"/>
+    <path d="M98 36l12-8M100 50h14M98 64l12 8" stroke="#ffc53d" stroke-width="5" stroke-linecap="round"/></svg>`,
 };
 
 /* Ming the study cat. One head is shared by the full body (home, results) and the peeking pose (quiz).

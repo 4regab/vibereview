@@ -1,13 +1,13 @@
 # vibe reviewer
 
-A quiz site for reviewing **GE2506 Literature** terms. Ming, the study cat, gives you a definition and you pick the matching term.
+A quiz site for reviewing **GE2506 Literature** and **AS2602 Advertising** terms. Ming, the study cat, gives you a definition and you pick the matching term.
 
 **Live site:** https://4regab.github.io/vibereview/
 
 ## How it works
 
-- **Rounds of 10.** The question bank has 93 GE2506 Literature questions: 90 terms and 3 matching sets, all taken from Handouts 1A and 2A (Enlightenment to Realism and Naturalism, *Gulliver's Travels* Part I and *The Adventures of Huckleberry Finn*). Every round takes the next 10 from the bank.
-- **Definition questions.** Each question shows a definition with four possible terms. The app can also show a **matching set** (tap a left tile, then its match). Literature has three: period and years, writer and work, and Romantic poet and poem.
+- **Rounds of 10.** There are two subjects. GE2506 Literature has 93 questions: 90 terms and 3 matching sets, all taken from Handouts 1A and 2A (Enlightenment to Realism and Naturalism, *Gulliver's Travels* Part I and *The Adventures of Huckleberry Finn*). AS2602 Advertising has 43: 40 terms and 3 matching sets, taken from 03 Handout 1 (advertising ethics, the Data Privacy Act of 2012, AI ethics and the Consumer Act of the Philippines). Every round takes the next 10 from a subject's bank.
+- **Definition questions.** Each question shows a definition with four possible terms. The app can also show a **matching set** (tap a left tile, then its match). Literature has three: period and years, writer and work, and Romantic poet and poem. Advertising has three: privacy rights, laws and numbers, and penalties.
 - **Wrong? Try again.** A wrong pick locks that choice, and a wrong pair shakes and unlocks. You keep going until you get it right.
 - **Missed questions come back.** A question you get right on the first try leaves the bank. A question you miss goes to the back of the bank and shows up in a later round.
 - **Try the round again.** The results screen lets you replay the same 10 questions. First-try answers in a replay also count toward the bank.
