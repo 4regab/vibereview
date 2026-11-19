@@ -8,6 +8,7 @@
   --blue: #2f80ed; --blue-d: #1d5fc2; --blue-l: #e2eeff; --sky: #6fb6ff;
   --green: #0f7a45; --green-d: #0a5a33;
   --purple: #6a3fd6; --purple-d: #4f2ca8;
+  --teal: #0e7490; --teal-d: #0a5468;
   --red: #ff4d5e; --red-d: #d42c3d; --red-l: #ffe2e5;
   --yellow: #ffc53d; --yellow-d: #e0a100;
   --r: 18px;
@@ -43,6 +44,7 @@ button:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
 .btn-blue { background: var(--blue); --edge: var(--blue-d); color: #fff; }
 .btn-green { background: var(--green); --edge: var(--green-d); color: #fff; }
 .btn-purple { background: var(--purple); --edge: var(--purple-d); color: #fff; }
+.btn-teal { background: var(--teal); --edge: var(--teal-d); color: #fff; }
 .btn-ghost { background: var(--card); --edge: var(--line-d); color: var(--orange-d); border: 2px solid var(--line-d); }
 .btn .ic { width: 1.15em; height: 1.15em; }
 .icon-btn { width: 42px; height: 42px; flex: none; display: grid; place-items: center; padding: 0; border: 0; border-radius: 12px; background: transparent; color: var(--icon); transition: background-color .2s ease, color .2s ease, transform .1s var(--ease-out); }
@@ -122,6 +124,8 @@ main { max-width: 1080px; margin: 0 auto; padding: 18px 16px 40px; }
 .s-lit .bar > div { background: var(--green); }
 .s-adv .subject-head { background: var(--purple); }
 .s-adv .bar > div { background: var(--purple); }
+.s-vis .subject-head { background: var(--teal); }
+.s-vis .bar > div { background: var(--teal); }
 .subject-head h3 { position: relative; color: #fff; font-size: 1.22rem; line-height: 1.15; }
 .subject-head small { position: relative; display: block; margin-bottom: 2px; font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; opacity: .92; font-weight: 900; }
 .subject-art { position: relative; width: 66px; height: 56px; flex: none; margin-left: auto; transition: transform .4s var(--spring); }

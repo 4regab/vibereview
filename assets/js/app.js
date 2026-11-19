@@ -2,8 +2,9 @@
 const INFO = {
   lit: { tag: "GE2506", title: "Literature: Enlightenment to Realism", cls: "s-lit", art: "lit", btn: "btn-green", color: "var(--green)" },
   adv: { tag: "AS2602", title: "Advertising: Ethics, Regulation and Privacy", cls: "s-adv", art: "adv", btn: "btn-purple", color: "var(--purple)" },
+  vis: { tag: "AS2506", title: "Visual Storytelling: Video, Audio and Infographics", cls: "s-vis", art: "vis", btn: "btn-teal", color: "var(--teal)" },
 };
-const SUBJECT_ORDER = ["lit", "adv"]; // the subjects on the home page, in order
+const SUBJECT_ORDER = ["lit", "adv", "vis"]; // the subjects on the home page, in order
 const ROUND_SIZE = 10;
 // The "first" clips play first, in order; after that every clip plays once before any repeats.
 const SOUNDS = {
@@ -55,6 +56,11 @@ const ART = {
     <path d="M24 60l8 24h12l-6-24z" fill="#ffc53d"/>
     <rect x="76" y="12" width="12" height="76" rx="6" fill="#fff"/>
     <path d="M98 36l12-8M100 50h14M98 64l12 8" stroke="#ffc53d" stroke-width="5" stroke-linecap="round"/></svg>`,
+  vis: `<svg viewBox="0 0 120 100" aria-hidden="true">
+    <rect x="10" y="30" width="70" height="50" rx="10" fill="#fff"/>
+    <path d="M80 48l30-16v46L80 62z" fill="#fff"/>
+    <circle cx="30" cy="20" r="11" fill="#ffc53d"/><circle cx="58" cy="20" r="11" fill="#ffc53d"/>
+    <circle cx="45" cy="55" r="12" fill="#0a5468" opacity=".35"/></svg>`,
 };
 
 /* Ming the study cat. One head is shared by the full body (home, results) and the peeking pose (quiz).
