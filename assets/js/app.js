@@ -1,9 +1,8 @@
 // vibe reviewer: quiz logic. The question banks live in terms.js, loaded first.
 const INFO = {
-  sad: { tag: "Systems", title: "Systems Analysis & Design", cls: "s-sad", art: "sad", btn: "btn-blue", color: "var(--blue)" },
   lit: { tag: "GE2506", title: "Literature: Enlightenment to Realism", cls: "s-lit", art: "lit", btn: "btn-green", color: "var(--green)" },
 };
-const SUBJECT_ORDER = ["sad", "lit"]; // the subjects on the home page, in order
+const SUBJECT_ORDER = ["lit"]; // the subjects on the home page, in order
 const ROUND_SIZE = 10;
 // The "first" clips play first, in order; after that every clip plays once before any repeats.
 const SOUNDS = {
@@ -45,12 +44,6 @@ const FLAME = `<span class="flame" aria-hidden="true"><svg viewBox="0 0 32 40">
 </svg></span>`;
 
 const ART = {
-  sad: `<svg viewBox="0 0 120 100" aria-hidden="true">
-    <path d="M30 36 L60 62 M90 36 L60 62" stroke="#fff" stroke-width="5" stroke-dasharray="2 8" stroke-linecap="round" opacity=".8"/>
-    <rect x="8" y="10" width="44" height="30" rx="9" fill="#fff"/><path d="M17 22h18M17 30h10" stroke="#1d5fc2" stroke-width="4" stroke-linecap="round"/>
-    <rect x="68" y="10" width="44" height="30" rx="9" fill="#ffc53d"/><circle cx="80" cy="25" r="5" fill="#fff"/><path d="M90 25h12" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-    <rect x="34" y="56" width="52" height="17" rx="7" fill="#ff7a00"/><rect x="34" y="76" width="52" height="17" rx="7" fill="#d65f00"/>
-    <circle cx="45" cy="64.5" r="3" fill="#fff"/><circle cx="45" cy="84.5" r="3" fill="#fff"/></svg>`,
   lit: `<svg viewBox="0 0 120 100" aria-hidden="true">
     <path d="M60 26C48 16 30 14 12 18v62c18-4 36-2 48 8 12-10 30-12 48-8V18c-18-4-36-2-48 8z" fill="#fff"/>
     <path d="M60 26v62" stroke="#0b6a3a" stroke-width="3" opacity=".35"/>
@@ -387,7 +380,7 @@ function loadProg(s) {
 const saveProg = (s, p) => store.set(progKey(s), JSON.stringify(p));
 
 /* ---------- State ---------- */
-let subject = "sad", TERMS = [], prog = null, retrying = false;
+let subject = "lit", TERMS = [], prog = null, retrying = false;
 let order = [], pos = 0, score = 0, missed = [], answered = false, current = null, busy = false;
 let streak = 0, bestStreak = 0, startedAt = 0;
 
